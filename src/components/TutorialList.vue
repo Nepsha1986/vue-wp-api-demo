@@ -1,34 +1,24 @@
 <template>
-    <div>
-        <h2>Tutorial list</h2>
+    <div class="container mt-3 mb-3">
+        <h2 class="mb-3">Check Media Latest Posts</h2>
+
+        <input type="text" class="form-control mb-3" placeholder="Search">
 
         <table class="table">
             <thead class="thead-inverse">
+
             <tr>
-                <th>#</th>
-                <th>{{ test }}</th>
-                <th>Last Name</th>
-                <th>Username</th>
+                <th @click="">#</th>
+                <th>Title</th>
+                <th>Post</th>
             </tr>
+
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
+            <tr v-for="(postData, index) in postsData" :key="index">
+                <td><author-data :authorId="postData.author"></author-data></td>
+                <td>{{ postData.title.rendered }}</td>
+                <td>{{ postData.excerpt.rendered | striphtml }}</td>
             </tr>
             </tbody>
         </table>
@@ -36,22 +26,41 @@
 </template>
 
 <script>
+    import AuthorData from "./AuthorData.vue"
+
     export default {
         name: "TutorialsList",
         data() {
             return {
-                test: 'test'
+                postsData: []
             }
+        },
+
+        components: {
+            AuthorData
         },
 
         beforeMount() {
-            fetchData()
+            this.fetchPostData('https://4eck-media.de/wp-json/wp/v2/posts?per_page=3')
         },
 
         methods: {
-            fetchData(url) {
-                console.log()
+            fetchPostData(url) {
+                let self = this;
+
+                axios.get(url)
+                    .then(function (response) {
+                        self.postsData = response.data;
+                        console.log(self.postsData)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
+        },
+
+        computed: {
+
         }
     }
 </script>
