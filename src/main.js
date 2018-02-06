@@ -21,10 +21,10 @@ Vue.filter('striphtml', (value) => {
     return div.textContent || div.innerText || "";
 });
 
-Vue.filter('adddots', value => value + '...' );
-
 Vue.filter('formatDate', function(value) {
     if (value) {
         return moment(String(value)).startOf('day').fromNow()
     }
-})
+});
+
+Vue.filter('makeExcerpt', val =>  val.substring(0, 100) + ' [...]');

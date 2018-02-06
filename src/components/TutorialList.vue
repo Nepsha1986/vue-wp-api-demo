@@ -1,39 +1,40 @@
 <template>
-    <div class="container mt-3 mb-3">
+    <div class="container pt-3 mb-3" v-cloak>
         <h2 class="mb-3">Check Media Latest Posts</h2>
 
         <input type="text" v-model="search" class="form-control mb-3" placeholder="Search">
 
-        <table class="table" v-if="filteredList.length > 0">
-            <thead class="thead-inverse">
-
-            <tr>
-                <th>Author</th>
-                <th>Title</th>
-                <th>Post</th>
-            </tr>
-
-            </thead>
-            <tbody>
-            <tr v-for="(postData, index) in filteredList" :key="index">
-                <td>
+        <ul class="list-group" v-if="filteredList.length > 0">
+            <li class="list-group-item" v-for="(postData, index) in filteredList" :key="index">
+                <div>
                     <author-data :authorId="postData.author"></author-data>
                     <span><small>Published: {{ postData.modified | formatDate}}</small></span>
-                </td>
-                <td>{{ postData.title.rendered | striphtml }}</td>
-                <td>{{ postData.excerpt.rendered | striphtml | adddots }} <a :href="postData.link">Read More</a></td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+                <div>{{ postData.title.rendered | striphtml }}</div>
+                <div>
+                    <span class="d-block mb-3">{{ postData.content.rendered | striphtml | makeExcerpt }}</span>
+                    <button class="btn btn-primary" @click.prevent="showPost(postData)">Read</button>
+                </div>
+            </li>
+        </ul>
 
         <div v-else>
-            <h5>Sorry no posts found on your creterea!</h5>
+            <h5>Sorry no posts matched your criteria...</h5>
         </div>
+
+        <transition name="slide-from-right">
+            <active-single-post
+                    @onCloseCurrentPost="closeCurrentPost"
+                    v-if="isActiveSinglePostToShow"
+                    :post="singlePostToShow">
+            </active-single-post>
+        </transition>
     </div>
 </template>
 
 <script>
     import AuthorData from "./AuthorData.vue"
+    import ActiveSinglePost from "./ActiveSinglePost.vue"
 
     export default {
         name: "TutorialsList",
@@ -42,15 +43,19 @@
             return {
                 search: '',
                 postsData: [],
+                singlePostToShow: {},
+
+                isActiveSinglePostToShow: false
             }
         },
 
         components: {
-            AuthorData
+            AuthorData,
+            ActiveSinglePost
         },
 
         beforeMount() {
-            this.fetchPostData('https://4eck-media.de/wp-json/wp/v2/posts?per_page=3')
+            this.fetchPostData('https://4eck-media.de/wp-json/wp/v2/posts')
         },
 
         methods: {
@@ -64,6 +69,15 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+
+            showPost(post) {
+                this.isActiveSinglePostToShow = true;
+                this.singlePostToShow = post;
+            },
+
+            closeCurrentPost() {
+                this.isActiveSinglePostToShow = false;
             }
         },
 
@@ -71,10 +85,32 @@
             filteredList() {
                 return this.postsData.filter(post => {
                     let hasTextInTitle = post.title.rendered.toLowerCase().includes(this.search.toLowerCase());
-                    let hasTextInText = post.content.rendered.toLowerCase().includes(this.search.toLowerCase());
-                    return  hasTextInTitle || hasTextInText;
+                    let hasTextInContent = post.content.rendered.toLowerCase().includes(this.search.toLowerCase());
+                    return hasTextInTitle || hasTextInContent;
                 })
             }
         }
     }
 </script>
+
+<style>
+    img {
+        width: 100% !important;
+        height: auto;
+        display: block;
+    }
+
+    .slide-from-right-enter-active, .slide-from-right-leave-active {
+        transition: .5s;
+    }
+
+    .slide-from-right-enter {
+        right: -100%;
+        opacity: 0;
+    }
+
+    .slide-from-right-leave-to {
+        left: -100%;
+        opacity: 0;
+    }
+</style>

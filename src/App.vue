@@ -12,3 +12,9 @@ export default {
   components: { TutorialList }
 }
 </script>
+
+<style>
+  body {
+    position: relative;
+  }
+</style>
