@@ -22,7 +22,7 @@
             <h5>Sorry no posts matched your criteria...</h5>
         </div>
 
-        <transition name="slide-from-right">
+        <transition name="slide-from-top">
             <active-single-post
                     @onCloseCurrentPost="closeCurrentPost"
                     v-if="isActiveSinglePostToShow"
@@ -101,17 +101,17 @@
         display: block;
     }
 
-    .slide-from-right-enter-active, .slide-from-right-leave-active {
+    .slide-from-top-enter-active, .slide-from-top-leave-active {
         transition: .5s;
     }
 
-    .slide-from-right-enter {
-        right: -100%;
+    .slide-from-top-enter {
+        top: -100%;
         opacity: 0;
     }
 
-    .slide-from-right-leave-to {
-        left: -100%;
+    .slide-from-top-leave-to {
+        top: 100%;
         opacity: 0;
     }
 </style>
