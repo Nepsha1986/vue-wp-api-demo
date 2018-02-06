@@ -35,6 +35,7 @@
 <script>
     import AuthorData from "./AuthorData.vue"
     import ActiveSinglePost from "./ActiveSinglePost.vue"
+    import config from '../config.js'
 
     export default {
         name: "TutorialsList",
@@ -55,7 +56,7 @@
         },
 
         beforeMount() {
-            this.fetchPostData('https://4eck-media.de/wp-json/wp/v2/posts')
+            this.fetchPostData(`${config.API_URI}/wp-json/wp/v2/posts?per_page=${config.POSTS_PER_PAGE}`)
         },
 
         methods: {

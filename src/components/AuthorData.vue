@@ -5,6 +5,8 @@
 </template>
 
 <script>
+    import config from '../config.js';
+
     export default {
         name: 'AuthorData',
         props: ['authorId'],
@@ -25,7 +27,7 @@
         mounted() {
             let self = this;
 
-            axios.get("https://4eck-media.de/wp-json/wp/v2/users/" + this.authorId)
+            axios.get(`${config.API_URI}/wp-json/wp/v2/users/` + this.authorId)
                 .then(function (response) {
                     self.userName = response.data.name;
                     self.userLink = response.data.link;
