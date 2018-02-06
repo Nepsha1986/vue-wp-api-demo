@@ -48,6 +48,7 @@
         bottom: unset;
         overflow: unset;
         display: block;
+        min-height: 100%;
     }
 
     .modal-dialog {
