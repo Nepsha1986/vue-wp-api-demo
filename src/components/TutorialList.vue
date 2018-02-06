@@ -18,6 +18,7 @@
             <tr v-for="(postData, index) in filteredList" :key="index">
                 <td>
                     <author-data :authorId="postData.author"></author-data>
+                    <span><small>Published: {{ postData.modified | formatDate}}</small></span>
                 </td>
                 <td>{{ postData.title.rendered | striphtml }}</td>
                 <td>{{ postData.excerpt.rendered | striphtml | adddots }} <a :href="postData.link">Read More</a></td>
@@ -69,7 +70,9 @@
         computed: {
             filteredList() {
                 return this.postsData.filter(post => {
-                    return post.title.rendered.toLowerCase().includes(this.search.toLowerCase()) || post.content.rendered.toLowerCase().includes(this.search.toLowerCase())
+                    let hasTextInTitle = post.title.rendered.toLowerCase().includes(this.search.toLowerCase());
+                    let hasTextInText = post.content.rendered.toLowerCase().includes(this.search.toLowerCase());
+                    return  hasTextInTitle || hasTextInText;
                 })
             }
         }

@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import moment from 'moment'
 
 window.axios = require('axios');
 
@@ -20,4 +21,10 @@ Vue.filter('striphtml', (value) => {
     return div.textContent || div.innerText || "";
 });
 
-Vue.filter('adddots', value => value + '...' )
+Vue.filter('adddots', value => value + '...' );
+
+Vue.filter('formatDate', function(value) {
+    if (value) {
+        return moment(String(value)).startOf('day').fromNow()
+    }
+})
