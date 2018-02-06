@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <tutorial-list></tutorial-list>
+    <posts-list></posts-list>
   </div>
 </template>
 
 <script>
-  import TutorialList from './components/TutorialList.vue'
+  import PostsList from './components/PostsList.vue'
 
 export default {
   name: 'App',
-  components: { TutorialList }
+  components: { PostsList }
 }
 </script>
 

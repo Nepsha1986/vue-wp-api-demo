@@ -1,20 +1,21 @@
 <template>
     <div class="container pt-3 mb-3" v-cloak>
-        <h2 class="mb-3">Check Media Latest Posts</h2>
+        <h2 class="mb-3 text-primary">Check Media Latest Posts</h2>
 
         <input type="text" v-model="search" class="form-control mb-3" placeholder="Search">
 
         <ul class="list-group" v-if="filteredList.length > 0">
-            <li class="list-group-item" v-for="(postData, index) in filteredList" :key="index">
-                <div>
-                    <author-data :authorId="postData.author"></author-data>
-                    <span><small>Published: {{ postData.modified | formatDate}}</small></span>
-                </div>
-                <div>{{ postData.title.rendered | striphtml }}</div>
-                <div>
-                    <span class="d-block mb-3">{{ postData.content.rendered | striphtml | makeExcerpt }}</span>
-                    <button class="btn btn-primary" @click.prevent="showPost(postData)">Read</button>
-                </div>
+            <li class="list-group-item mb-2" v-for="(postData, index) in filteredList" :key="index">
+
+                <h4 class="text-primary">{{ postData.title.rendered | striphtml }}</h4>
+
+                <span class="d-block mb-3">{{ postData.content.rendered | striphtml | makeExcerpt }}</span>
+
+                <span class="d-block mb-3">
+                    <small>Published: {{ postData.modified | formatDate}}</small>
+                </span>
+
+                <button class="btn btn-primary" @click.prevent="showPost(postData)">Read</button>
             </li>
         </ul>
 
@@ -33,12 +34,11 @@
 </template>
 
 <script>
-    import AuthorData from "./AuthorData.vue"
     import ActiveSinglePost from "./ActiveSinglePost.vue"
     import config from '../config.js'
 
     export default {
-        name: "TutorialsList",
+        name: "PostsList",
 
         data() {
             return {
@@ -51,7 +51,6 @@
         },
 
         components: {
-            AuthorData,
             ActiveSinglePost
         },
 
