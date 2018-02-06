@@ -2,26 +2,32 @@
     <div class="container mt-3 mb-3">
         <h2 class="mb-3">Check Media Latest Posts</h2>
 
-        <input type="text" class="form-control mb-3" placeholder="Search">
+        <input type="text" v-model="search" class="form-control mb-3" placeholder="Search">
 
-        <table class="table">
+        <table class="table" v-if="filteredList.length > 0">
             <thead class="thead-inverse">
 
             <tr>
-                <th @click="">#</th>
+                <th>Author</th>
                 <th>Title</th>
                 <th>Post</th>
             </tr>
 
             </thead>
             <tbody>
-            <tr v-for="(postData, index) in postsData" :key="index">
-                <td><author-data :authorId="postData.author"></author-data></td>
-                <td>{{ postData.title.rendered }}</td>
-                <td>{{ postData.excerpt.rendered | striphtml }}</td>
+            <tr v-for="(postData, index) in filteredList" :key="index">
+                <td>
+                    <author-data :authorId="postData.author"></author-data>
+                </td>
+                <td>{{ postData.title.rendered | striphtml }}</td>
+                <td>{{ postData.excerpt.rendered | striphtml | adddots }} <a :href="postData.link">Read More</a></td>
             </tr>
             </tbody>
         </table>
+
+        <div v-else>
+            <h5>Sorry no posts found on your creterea!</h5>
+        </div>
     </div>
 </template>
 
@@ -30,9 +36,11 @@
 
     export default {
         name: "TutorialsList",
+
         data() {
             return {
-                postsData: []
+                search: '',
+                postsData: [],
             }
         },
 
@@ -51,7 +59,6 @@
                 axios.get(url)
                     .then(function (response) {
                         self.postsData = response.data;
-                        console.log(self.postsData)
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -60,7 +67,11 @@
         },
 
         computed: {
-
+            filteredList() {
+                return this.postsData.filter(post => {
+                    return post.title.rendered.toLowerCase().includes(this.search.toLowerCase()) || post.content.rendered.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }
         }
     }
 </script>

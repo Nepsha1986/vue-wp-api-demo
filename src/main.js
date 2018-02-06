@@ -14,9 +14,10 @@ new Vue({
   template: '<App/>'
 })
 
-Vue.filter('striphtml', function (value) {
-    var div = document.createElement("div");
+Vue.filter('striphtml', (value) => {
+    let div = document.createElement("div");
     div.innerHTML = value;
-    var text = div.textContent || div.innerText || "";
-    return text;
+    return div.textContent || div.innerText || "";
 });
+
+Vue.filter('adddots', value => value + '...' )
